@@ -1,0 +1,27 @@
+version: '2'
+services:  
+  base:
+    image: node:11
+    volumes:
+      - nodemodules:/usr/src/md-server-client/node_modules
+      - .:/usr/src/md-server-client/
+    working_dir: /usr/src/md-server-client/  
+  install:
+    extends:
+      service: base
+    command: npm i  
+  install:
+    extends:
+      service: base
+    command: npm update
+  build:
+    extends:
+      service: base
+    command: npm run build  
+  create-bundles:
+    extends:
+      service: base
+    command: npm run create-bundles
+volumes:
+  nodemodules: {}
+#    external: true

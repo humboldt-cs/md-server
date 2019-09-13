@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dev:
+    image: node:11
+    volumes:
+      - nodemodules:/usr/src/md-server/node_modules
+      - .:/usr/src/md-server
+    environment:
+      - NODE_ENV=development
+    working_dir: /usr/src/md-server
+    command: npm start
+    ports:
+      - 8080:8080
+volumes:
+  nodemodules: {}
+#    external: true
