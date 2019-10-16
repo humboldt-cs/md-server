@@ -17,8 +17,8 @@ const session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
 var config = {
-    mode: 'debug',
-    session_path: 'session'
+   mode: 'debug',
+   session_path: 'session'
 };
 
 // configure app to use bodyParser()
@@ -68,15 +68,35 @@ app.use((req, res, next) => {
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
+var path = require("path");
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', (req, res) => {
-   res.json({ message: 'hooray! welcome to our api!' });
+
+router.get('/fetchNames', (req, res) => {
+   const mdDirectory = __dirname + '/MarkdownFiles/';
+
+   fs.readdir(mdDirectory, (err, files) => {
+      res.send(files);
+   });
+});
+
+router.get('/:filename', (req, res) => {
+   res.sendFile(__dirname + '/MarkdownFiles/' + req.params.filename + '.md');
+});
+
+router.post('/:filename', (req, res) => {
+   if (req.body.updatedFile.trim() != "") {
+      var filename = req.originalUrl.slice(1) + '.md';
+      fs.writeFileSync(__dirname + '/MarkdownFiles/' + filename, req.body.updatedFile, function (err) {
+         if (err) { return console.log(err); }
+      });
+   }
+   res.redirect(req.originalUrl);
 });
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api/v1', router);
+app.use('/', router);
 
 // START THE SERVER
 // =============================================================================
