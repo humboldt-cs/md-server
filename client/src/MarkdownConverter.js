@@ -5,33 +5,66 @@ import "easymde/dist/easymde.min.css";
 import axios from 'axios';
 
 class MarkdownConverter extends Component {
+    constructor(props) {
+        super(props);
+
+        this.getMdContents = this.getMdContents.bind(this);
+        this.changeEditing = this.changeEditing.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
     state = {
         mdFile: "",
         htmlFile: "",
-        fileNames: [],
+        fileName: "",
         editing: false,
         updatedFile: ""
     }
 
-
-    componentDidMount() {
-        fetch('/' + this.props.match.params.filename)
+    getMdContents(filename) {
+        fetch('/' + filename)
             .then((res) => res.text())
             .then((text) => {
                 var fileContents = text;
-                this.setState({ mdFile: fileContents });
-                this.setState({ htmlFile: fileContents });
+                var showdown = require('showdown');
+                var converter = new showdown.Converter();
+                var markdown = fileContents;
+                var html = converter.makeHtml(markdown);
 
-                var showdown = require('showdown'),
-                    converter = new showdown.Converter(),
-                    markdown = fileContents,
-                    html = converter.makeHtml(markdown);
-
-                this.setState({ htmlFile: html });
+                this.setState(
+                    {
+                        mdFile: fileContents,
+                        fileName: filename,
+                        htmlFile: html
+                    }
+                );
             })
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    static getDerivedStateFromProps(new_props, state) {
+        if (state.fileName !== new_props.match.params.filename) {
+            return {
+                mdFile: "",
+                htmlFile: "",
+                fileName: new_props.match.params.filename,
+                editing: false,
+                updatedFile: "",
+            };
+        }
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.fileName !== prevState.fileName) {
+          this.getMdContents(this.props.match.params.filename);
+        }
+      }
+
+
+    componentDidMount() {
+        this.getMdContents(this.props.match.params.filename);
     }
 
     changeEditing() {
