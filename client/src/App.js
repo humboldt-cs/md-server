@@ -27,20 +27,24 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="ui secondary  menu" style={{ marginTop: 15 }} >
+        <div className="ui secondary  menu" style={{ margin: 15 }} >
           {this.state.fileNames.map((file, i) => {
             return (
               <Link
                 className="item"
                 key={i}
-                to={__dirname + file.slice(0, -3)}
-                onClick={() => this.redirectToFile(file.slice(0, -3))}>
+                to={__dirname + file.slice(0, -3)}>
                 {file.slice(0, -3)}
               </Link>
             )
           })}
+          <Link 
+            className="item right" 
+            to={__dirname}>
+              New Document
+          </Link>
         </div>
-        <hr style={{ color: "lightskyblue" }} />
+        <hr />
 
         <Route path="/:filename" component={MarkdownConverter} />
 
