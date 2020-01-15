@@ -5,23 +5,16 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import MarkdownConverter from './MarkdownConverter';
+import MarkdownConverter from './Components/MarkdownConverter';
 
 
 class App extends Component {
   state = { myFile: '', fileNames: [] }
 
   componentDidMount() {
-    fetch('/fetchNames')
+    fetch('/files/fetchNames')
       .then(res => res.json())
       .then(fileNames => this.setState({ fileNames }));
-  }
-
-  redirectToFile(value) {
-    // For some reason the below links change the URL
-    // but don't load it, so this is a temporary workaround.
-
-    window.location.href = "http://localhost:3000/" + value;
   }
 
   render() {
@@ -38,10 +31,10 @@ class App extends Component {
               </Link>
             )
           })}
-          <Link 
-            className="item right" 
+          <Link
+            className="item right"
             to={__dirname}>
-              New Document
+            New Document
           </Link>
         </div>
         <hr />
