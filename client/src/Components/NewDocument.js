@@ -43,11 +43,12 @@ class NewDocument extends Component {
         }
 
         // Send new name and doc to server
-        axios.post('/files/new_file', { filename: doc_name, newFile: this.state.newFile })
+        axios.post('/files/new_file', { filename: doc_name.trim(), newFile: this.state.newFile })
             .then(res => console.log(res))
             .catch(err => console.log(err));
 
-        window.location.href = "http://localhost:3000/" + doc_name;
+        var newDocIndex = window.location.href.indexOf("new_document");
+        window.location.href = window.location.href.substring(0, newDocIndex) + doc_name.trim().replace(/ /g, "%20");
     }
 
     render() {

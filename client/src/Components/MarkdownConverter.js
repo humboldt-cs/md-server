@@ -86,12 +86,7 @@ class MarkdownConverter extends Component {
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
-            // Direct to URL without filename
-            var filename = this.props.match.params.filename.replace(/ /g, "%20");
-            var nameIndex = window.location.href.indexOf(filename);
-            if (nameIndex !== -1) {
-                window.location.href = window.location.href.substring(0, nameIndex);
-            }
+            window.location.href = window.location.origin;
         }
     }
 
