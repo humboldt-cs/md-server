@@ -2,26 +2,21 @@ import React, { Component } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
+  Switch,
   Route,
   Link
 } from 'react-router-dom';
-import MarkdownConverter from './MarkdownConverter';
+import MarkdownConverter from './Components/MarkdownConverter';
+import NewDocument from './Components/NewDocument';
 
 
 class App extends Component {
   state = { myFile: '', fileNames: [] }
 
   componentDidMount() {
-    fetch('/fetchNames')
+    fetch('/files/fetchNames')
       .then(res => res.json())
       .then(fileNames => this.setState({ fileNames }));
-  }
-
-  redirectToFile(value) {
-    // For some reason the below links change the URL
-    // but don't load it, so this is a temporary workaround.
-
-    window.location.href = "http://localhost:3000/" + value;
   }
 
   render() {
@@ -33,22 +28,24 @@ class App extends Component {
               <Link
                 className="item"
                 key={i}
-                to={__dirname + file.slice(0, -3)}>
+                to={file.slice(0, -3)}>
                 {file.slice(0, -3)}
               </Link>
             )
           })}
-          <Link 
-            className="item right" 
-            to={__dirname}>
-              New Document
+          <Link
+            className="item right"
+            to={"/new_document"}>
+            New Document
           </Link>
         </div>
         <hr />
 
-        <Route path="/:filename" component={MarkdownConverter} />
-
-      </Router >
+        <Switch>
+          <Route path="/new_document" component={NewDocument} />
+          <Route path="/:filename" component={MarkdownConverter} />
+        </Switch>
+      </Router>
     );
   }
 }

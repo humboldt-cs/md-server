@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 import SimpleMDE from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css";
 import axios from 'axios';
@@ -21,7 +20,7 @@ class MarkdownConverter extends Component {
     }
 
     getMdContents(filename) {
-        fetch('/' + filename)
+        fetch('/files/' + filename)
             .then((res) => res.text())
             .then((text) => {
                 var fileContents = text;
@@ -58,9 +57,9 @@ class MarkdownConverter extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.fileName !== prevState.fileName) {
-          this.getMdContents(this.props.match.params.filename);
+            this.getMdContents(this.props.match.params.filename);
         }
-      }
+    }
 
 
     componentDidMount() {
@@ -71,7 +70,7 @@ class MarkdownConverter extends Component {
         if (this.state.editing) {
             this.setState({ editing: false })
 
-            axios.post('/' + this.props.match.params.filename, { updatedFile: this.state.updatedFile })
+            axios.post('/files/' + this.props.match.params.filename, { updatedFile: this.state.updatedFile })
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 

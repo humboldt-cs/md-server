@@ -36,7 +36,18 @@ hr {
   color: lightskyblue;
 }
 
-MarkdownEditor {
-  margin-left: 10%;
-  margin-right: 50%;
+.new_document_editor{
+  margin-left: 1%;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.new_document_name {
+  width: 220px;
+  padding: 12px 10px;
+  margin-left: 1%;
+  margin-top: 0;
+  margin-bottom: 4px;
+  border: 1px solid gray;
+  border-radius: 5px;
 }

@@ -2,4 +2,4 @@
 2. And a list!
 
 # An image:
-![](https://i.imgur.com/DfjlogK.jpg)
+![](https://i.imgur.com/DfjlogK.jpga)
