@@ -9,6 +9,7 @@ class MarkdownConverter extends Component {
 
         this.getMdContents = this.getMdContents.bind(this);
         this.changeEditing = this.changeEditing.bind(this);
+        this.deleteFile = this.deleteFile.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     state = {
@@ -61,7 +62,6 @@ class MarkdownConverter extends Component {
         }
     }
 
-
     componentDidMount() {
         this.getMdContents(this.props.match.params.filename);
     }
@@ -74,9 +74,22 @@ class MarkdownConverter extends Component {
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
-            window.location.href = "http://localhost:3000/" + this.props.match.params.filename;
+            window.location.reload();
         } else {
             this.setState({ editing: true })
+        }
+    }
+
+    deleteFile() {
+        if (window.confirm("Delete file? This cannot be undone.")) {
+            axios.delete('/files/' + this.props.match.params.filename)
+                .then(res => console.log(res))
+                .catch(err => console.log(err));
+
+            // Direct to URL without filename
+            var filename = this.props.match.params.filename.replace(" ", "%");
+            var nameIndex = window.location.href.indexOf(filename);
+            window.location.href = window.location.href.substring(0, nameIndex);
         }
     }
 
@@ -94,7 +107,12 @@ class MarkdownConverter extends Component {
                         style={{ marginLeft: "1%", marginBottom: "1%" }}>
                         Save
                     </button>
-                    <div style={{ marginLeft: "1%", marginRight: "25%" }}>
+                    <button
+                        className="delete ui button"
+                        onClick={this.deleteFile}>
+                        Delete
+                    </button>
+                    <div style={{ marginLeft: "1%", marginRight: "1%" }}>
                         <div className="container container-narrow">
                             <div className="page-header">
                                 <SimpleMDE

@@ -15,7 +15,6 @@ router.get('/fetchNames', (req, res) => {
 });
 
 router.get('/:filename', (req, res) => {
-    console.log(__dirname);
     res.sendFile(path.resolve(__dirname + '/../MarkdownFiles/' + req.params.filename + '.md'));
 });
 
@@ -35,6 +34,10 @@ router.post('/:filename', (req, res) => {
         });
     }
     res.redirect(req.originalUrl);
+});
+
+router.delete('/:filename', (req, res) => {
+    fs.unlinkSync(__dirname + '/../MarkdownFiles/' + req.params.filename + '.md');
 });
 
 module.exports = router;

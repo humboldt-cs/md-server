@@ -43,17 +43,14 @@ class NewDocument extends Component {
         }
 
         // Send new name and doc to server
-        axios.post('/files/new_file', { filename: this.state.doc_name, newFile: this.state.newFile })
+        axios.post('/files/new_file', { filename: doc_name, newFile: this.state.newFile })
             .then(res => console.log(res))
             .catch(err => console.log(err));
 
-        window.location.href = "http://localhost:3000/" + this.state.doc_name;
+        window.location.href = "http://localhost:3000/" + doc_name;
     }
 
     render() {
-        var width = this.state.width;
-        var height = this.state.height
-
         return (
             <div>
                 <input
