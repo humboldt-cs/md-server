@@ -3,7 +3,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css";
 import axios from 'axios';
 
-class MarkdownConverter extends Component {
+class MarkdownViewer extends Component {
     constructor(props) {
         super(props);
 
@@ -18,6 +18,16 @@ class MarkdownConverter extends Component {
         fileName: "",
         editing: false,
         updatedFile: ""
+    }
+
+    componentDidMount() {
+        this.getMdContents(this.props.match.params.filename);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.fileName !== prevState.fileName) {
+            this.getMdContents(this.props.match.params.filename);
+        }
     }
 
     getMdContents(filename) {
@@ -54,16 +64,6 @@ class MarkdownConverter extends Component {
             };
         }
         return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.fileName !== prevState.fileName) {
-            this.getMdContents(this.props.match.params.filename);
-        }
-    }
-
-    componentDidMount() {
-        this.getMdContents(this.props.match.params.filename);
     }
 
     changeEditing() {
@@ -140,4 +140,4 @@ class MarkdownConverter extends Component {
     }
 }
 
-export default MarkdownConverter;
+export default MarkdownViewer;

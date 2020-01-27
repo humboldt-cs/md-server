@@ -3,69 +3,40 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from 'react-router-dom';
-import MarkdownConverter from './Components/MarkdownConverter';
+import MarkdownViewer from './Components/MarkdownViewer';
 import NewDocument from './Components/NewDocument';
+import FileBrowser from './Components/FileBrowser';
 import homeIcon from './resources/home.png';
-
+import newIcon from './resources/new.png';
 
 class App extends Component {
-  state = {
-    myFile: '',
-    fileNames: [],
-  }
-
-  componentDidMount() {
-    console.log(this.state.homepage)
-    fetch('/files/fetchNames')
-      .then(res => res.json())
-      .then(fileNames => this.setState({ fileNames }));
-  }
 
   render() {
     return (
-      <div>
-        <Router>
-          <div className="navBar" >
-            <a href={window.location.origin}>
-              <img className="home_icon" src={homeIcon} />
-            </a>
-            <a
-              className="ui button new_document"
-              href={"/new_document"}>
-              New Document
+      <div className='app'>
+        <div className="navBar" >
+          <a href={window.location.origin}>
+            <img className="home_icon" src={homeIcon} alt='home' />
           </a>
-          </div>
-          <hr />
+          <br />
+          <a href={window.location.origin + '/new_document'}>
+            <img className='new_icon' src={newIcon} alt='new document' />
+          </a>
+        </div>
 
-          <Switch>
-            <Route path="/new_document" component={NewDocument} />
-            <Route path="/:filename" component={MarkdownConverter} />
-          </Switch>
-        </Router>
+        <div className='pageContent'>
+          <Router>
+            <Route exact path={'/'} component={FileBrowser} />
 
-        {/* Only display files if there is nothing after the origin URL */}
-        {
-          window.location.href.substring(0, window.location.href.length - 1) === window.location.origin ?
-            <div className="file-grid">
-              {this.state.fileNames.map((file, i) => {
-                return (
-                  <a href={window.location.origin + "/" + file.slice(0, -3)}>
-                    <div
-                      className="file"
-                      key={i}>
-                      {file.slice(0, -3)}
-                    </div>
-                  </a>
-                )
-              })}
-            </div>
-
-            : null
-        }
-      </div >
+            <Switch>
+                <Route path="/new_document" component={NewDocument} />
+                <Route path="/:filename" component={MarkdownViewer} />
+            </Switch>
+          </Router>
+        </div>
+      </div>
     );
   }
 }
