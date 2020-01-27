@@ -9,8 +9,26 @@ router.use(bodyParser.json());
 router.get('/fetchNames', (req, res) => {
     const mdDirectory = __dirname + '/../MarkdownFiles/';
 
+    var fileArray = [];
+    
     fs.readdir(mdDirectory, (err, files) => {
-        res.send(files);
+        
+        for (i = 0; i < files.length; i++) {
+            var stats = fs.statSync(mdDirectory + files[i]);
+            var lstats = fs.lstatSync(mdDirectory + files[i]);
+
+            var info = {
+                name: files[i],
+                isDirectory: lstats.isDirectory(),
+                creationDate: stats.birthtime,
+                modifiedDate: stats.mtime,
+                size: stats.size,
+            }
+
+            fileArray.push(info);
+        }
+
+        res.send(fileArray);
     });
 });
 
