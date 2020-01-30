@@ -47,8 +47,7 @@ class NewDocument extends Component {
             .then(res => console.log(res))
             .catch(err => console.log(err));
 
-        var newDocIndex = window.location.href.indexOf("new_document");
-        window.location.href = window.location.href.substring(0, newDocIndex) + doc_name.trim().replace(/ /g, "%20");
+        window.location.href = window.location.href.replace('new_document', '') + doc_name.trim().replace(/ /g, "%20") + '.md';
     }
 
     render() {

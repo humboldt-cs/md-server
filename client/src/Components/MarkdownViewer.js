@@ -21,17 +21,22 @@ class MarkdownViewer extends Component {
     }
 
     componentDidMount() {
-        this.getMdContents(this.props.match.params.filename);
+        var filename = window.location.href.split('/').pop().replace('%20', ' ');
+        if (filename.substring(filename.length - 3, filename.length) === '.md') {
+            console.log("is da true true");
+            this.setState({ fileName: filename });
+            this.getMdContents(filename);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.fileName !== prevState.fileName) {
-            this.getMdContents(this.props.match.params.filename);
+            this.getMdContents(this.state.fileName);
         }
     }
 
     getMdContents(filename) {
-        fetch('/files/' + filename)
+        fetch('/files/fetchFiles/' + window.location.pathname)
             .then((res) => res.text())
             .then((text) => {
                 var fileContents = text;
@@ -53,24 +58,11 @@ class MarkdownViewer extends Component {
             });
     }
 
-    static getDerivedStateFromProps(new_props, state) {
-        if (state.fileName !== new_props.match.params.filename) {
-            return {
-                mdFile: "",
-                htmlFile: "",
-                fileName: new_props.match.params.filename,
-                editing: false,
-                updatedFile: "",
-            };
-        }
-        return null;
-    }
-
     changeEditing() {
         if (this.state.editing) {
             this.setState({ editing: false })
 
-            axios.post('/files/' + this.props.match.params.filename, { updatedFile: this.state.updatedFile })
+            axios.post('/files/' + this.state.fileName, { updatedFile: this.state.updatedFile, pathname: window.location.pathname })
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
@@ -81,12 +73,16 @@ class MarkdownViewer extends Component {
     }
 
     deleteFile() {
+        var filename = this.state.fileName;
+
         if (window.confirm("Delete file? This cannot be undone.")) {
-            axios.delete('/files/' + this.props.match.params.filename)
+            console.log("5 realz? " + window.location.pathname);
+            axios.delete('/files' + window.location.pathname)
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
-            window.location.href = window.location.origin;
+            // Removes filename from URL and reloads at directory it was in
+            window.location.href = window.location.href.replace(filename.replace(/ /g, '%20'), '');
         }
     }
 

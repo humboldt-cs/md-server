@@ -5,7 +5,6 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import MarkdownViewer from './Components/MarkdownViewer';
 import NewDocument from './Components/NewDocument';
 import FileBrowser from './Components/FileBrowser';
 import homeIcon from './resources/home.png';
@@ -28,11 +27,10 @@ class App extends Component {
 
         <div className='pageContent'>
           <Router>
-            <Route exact path={'/'} component={FileBrowser} />
+            <Route path={'/'} component={FileBrowser} />
 
             <Switch>
                 <Route path="/new_document" component={NewDocument} />
-                <Route path="/:filename" component={MarkdownViewer} />
             </Switch>
           </Router>
         </div>
