@@ -23,7 +23,6 @@ class MarkdownViewer extends Component {
     componentDidMount() {
         var filename = window.location.href.split('/').pop().replace('%20', ' ');
         if (filename.substring(filename.length - 3, filename.length) === '.md') {
-            console.log("is da true true");
             this.setState({ fileName: filename });
             this.getMdContents(filename);
         }

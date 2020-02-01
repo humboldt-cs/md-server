@@ -13,10 +13,11 @@ class FileBrowser extends Component {
     componentDidMount() {
       var url = window.location.href;
 
+      // Check if directed to a file.
       if (url.substring(url.length - 3, url.length) === '.md') {
         this.setState({ isFile: true });
       }else{
-        var pathname = "none";
+        var pathname = "root";
         if (window.location.pathname !== '/') {
           console.log("Test: " + window.location.pathname);
           pathname = window.location.pathname;
@@ -62,11 +63,21 @@ class FileBrowser extends Component {
                         alt='markdown' /> 
                     }
                     </div>
-                    {file.isDirectory ?
-                    file.name
-                    :
-                    file.name.slice(0, -3)
-                    }
+                    <div className='table'>
+                      <div className='file-name'>
+                        {file.isDirectory ?
+                          file.name
+                          :
+                          file.name.slice(0, -3)
+                        }
+                      </div>
+                      <div className='modifiedDate'>
+                        {file.modifiedDate}
+                      </div>
+                      <div className='creationDate'>
+                        {file.creationDate}
+                      </div>
+                    </div>
                   </div>
                 </a>
               )

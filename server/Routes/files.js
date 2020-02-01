@@ -9,7 +9,7 @@ router.use(bodyParser.json());
 router.get('/fetchFiles/:pathname*', (req, res) => {
     var mdDirectory = __dirname + '/../MarkdownFiles/';
 
-    if (req.params.pathname !== "none") {
+    if (req.params.pathname !== "root") {
         // Get index of path after 'fetchFiles'
         var pathIndex = req.originalUrl.indexOf(req.params.pathname.replace(/ /g,'%20'));
         // turn everything after 'fetchFiles' into a file route
@@ -27,12 +27,18 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
                 for (i = 0; i < files.length; i++) {
                     var stats = fs.statSync(mdDirectory + files[i]);
                     var lstats = fs.lstatSync(mdDirectory + files[i]);
-        
+
+                    var creationDate = stats.birthtime.toISOString();
+                    creationDate = creationDate.substring(8, 10) + '/' + creationDate.substring(5, 7) + '/' + creationDate.substring(2, 4);
+                    var modifiedDate = stats.mtime.toISOString();
+                    modifiedDate = modifiedDate.substring(8, 10) + '/' + modifiedDate.substring(5, 7) + '/' + modifiedDate.substring(2, 4);
+
+
                     var info = {
                         name: files[i],
                         isDirectory: lstats.isDirectory(),
-                        creationDate: stats.birthtime,
-                        modifiedDate: stats.mtime,
+                        creationDate: creationDate,
+                        modifiedDate: modifiedDate,
                         size: stats.size,
                     }
         
