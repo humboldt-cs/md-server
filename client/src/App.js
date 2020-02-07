@@ -20,7 +20,9 @@ class App extends Component {
             <img className="home_icon" src={homeIcon} alt='home' />
           </a>
           <br />
-          <a href={window.location.origin + '/new_document'}>
+          {/* New doc link includes previous path information so that a user
+              can make a new file at the last location they were browsing in */}
+          <a href={window.location.origin + '/new_document' + window.location.pathname}>
             <img className='new_icon' src={newIcon} alt='new document' />
           </a>
         </div>
@@ -30,7 +32,7 @@ class App extends Component {
             <Route path={'/'} component={FileBrowser} />
 
             <Switch>
-                <Route path="/new_document" component={NewDocument} />
+                <Route path='/new_document*' component={NewDocument} />
             </Switch>
           </Router>
         </div>

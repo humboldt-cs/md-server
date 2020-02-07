@@ -10,6 +10,7 @@ class NewDocument extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.saveNewDoc = this.saveNewDoc.bind(this);
         this.mdEditorChange = this.mdEditorChange.bind(this);
+        this.parsePath = this.parsePath.bind(this);
     }
 
     state = {
@@ -27,7 +28,6 @@ class NewDocument extends Component {
 
     saveNewDoc = value => {
         // Check if name or document are empty
-        console.log(this.state.newFile);
         if (this.state.doc_name === undefined) {
             alert("Please specify a document name");
             return;
@@ -42,17 +42,36 @@ class NewDocument extends Component {
             doc_name = doc_name.slice(0, doc_name.length - 3);
         }
 
-        // Send new name and doc to server
-        axios.post('/files/new_file', { filename: doc_name.trim(), newFile: this.state.newFile })
+        var parsedPath = this.parsePath();
+        console.log(parsedPath);
+
+        // Send new name, document, and path to be saved in to server
+        axios.post('/files/new_file', { 
+                filename: doc_name.trim(),
+                newFile: this.state.newFile,
+                savePath: parsedPath })
             .then(res => console.log(res))
             .catch(err => console.log(err));
 
-        window.location.href = window.location.href.replace('new_document', '') + doc_name.trim().replace(/ /g, "%20") + '.md';
+            console.log(parsedPath);
+
+        window.location.href = window.location.origin + '/' + parsedPath.replace(/ /g, "%20") + doc_name.trim().replace(/ /g, "%20") + '.md';
+    }
+
+    parsePath() {
+        var path = window.location.pathname;
+        path = path.substring(path.indexOf('/new_document') + 14, path.length);
+        if (path.substring(path.length - 3, path.length) === '.md') {
+            path = path.split('/');
+            path.pop();
+            path = path.join('/');
+        }
+        return path.replace(/%20/g, ' ') + '/';
     }
 
     render() {
         return (
-            <div>
+            <div className='new_document_panel'>
                 <input
                     type="text"
                     className="new_document_name"

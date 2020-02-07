@@ -14,7 +14,6 @@ div.navBar {
 div.pageContent {
   grid-column-start: 2;
   grid-column-end: 3;
-  margin-top: 10px;
 }
 
 .file_icon {
@@ -54,51 +53,11 @@ img.new_icon {
   margin: 5px;
 }
 
-.new_document {
-  float: right;
-  margin-right: 1% !important;
+.new_document_panel {
+  margin-top: 1%;
 }
 
-.file-grid {
-  display: grid;
-  grid-template-columns: 15% 15% 15% 55%;
-  width: 100%;
-}
-
-.file {
-  grid-column-start: 1;
-  grid-column-end: 5;
-  color: black;
-  height: 50px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  text-align: left;
-  line-height: 30px;
-}
-
-.file:hover {
-  background-color: lightgray;
-}
-
-.file-name {
-  margin-right: 2em;
-  float: left;
-}
-
-.creationDate {
-  width: 200px;
-  margin-right: 12%;
-  float: right;
-}
-
-.modifiedDate {
-  width: 200px;
-  margin-left: 5%;
-  margin-right: 5%;
-  float: right;
-}
-
-.new_document_editor{
+.new_document_editor {
   margin-left: 1%;
   margin-top: 4px;
   margin-bottom: 0;
@@ -117,8 +76,11 @@ img.new_icon {
   border-radius: 5px;
 }
 
-button.delete
-{
+.editing_panel {
+  margin-top: 1%;
+}
+
+button.delete {
   background-color: white !important;
   border: 1px solid #ff8080 !important;
   color: red !important;

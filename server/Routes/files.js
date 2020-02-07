@@ -28,17 +28,11 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
                     var stats = fs.statSync(mdDirectory + files[i]);
                     var lstats = fs.lstatSync(mdDirectory + files[i]);
 
-                    var creationDate = stats.birthtime.toISOString();
-                    creationDate = creationDate.substring(8, 10) + '/' + creationDate.substring(5, 7) + '/' + creationDate.substring(2, 4);
-                    var modifiedDate = stats.mtime.toISOString();
-                    modifiedDate = modifiedDate.substring(8, 10) + '/' + modifiedDate.substring(5, 7) + '/' + modifiedDate.substring(2, 4);
-
-
                     var info = {
                         name: files[i],
                         isDirectory: lstats.isDirectory(),
-                        creationDate: creationDate,
-                        modifiedDate: modifiedDate,
+                        creationDate: stats.birthtimeMs,
+                        modifiedDate: stats.mtimeMs,
                         size: stats.size,
                     }
         
@@ -53,18 +47,17 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
 
 router.post('/new_file', (req, res) => {
     if (req.body.filename.trim() != "" && req.body.newFile.trim() != "") {
-        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + req.body.filename + '.md', req.body.newFile, function (err) {
-            if (err) { return console.log(err); }
+        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + req.body.savePath + req.body.filename + '.md', req.body.newFile, function (err) {
+            if (err) { return console.log('Could not save new file: ' + err); }
         });
     }
 });
 
 // Update an existing file
 router.post('/:filename', (req, res) => {
-    var filepath = req.body.pathname.replace(/%20/g, ' ');
     if (req.body.updatedFile.trim() != "") {
         var filename = req.originalUrl.split('/').pop().replace(/%20/g, ' ');
-        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + filepath, req.body.updatedFile, function (err) {
+        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + req.body.pathname, req.body.updatedFile, function (err) {
             if (err) { return console.log(err); }
         });
     }

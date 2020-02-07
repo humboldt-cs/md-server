@@ -61,7 +61,7 @@ class MarkdownViewer extends Component {
         if (this.state.editing) {
             this.setState({ editing: false })
 
-            axios.post('/files/' + this.state.fileName, { updatedFile: this.state.updatedFile, pathname: window.location.pathname })
+            axios.post('/files/' + this.state.fileName, { updatedFile: this.state.updatedFile, pathname: window.location.pathname.replace(/%20/g, ' ') })
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
@@ -92,7 +92,7 @@ class MarkdownViewer extends Component {
     render() {
         if (this.state.editing) {
             return (
-                <div>
+                <div className='editing_panel'>
                     <button
                         className="ui button"
                         onClick={this.changeEditing.bind(this)}
