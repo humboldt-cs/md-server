@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 8080;
 
 // configure app to use bodyParser()
@@ -15,12 +16,37 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 
+// VERIFY LOGIN
+var verifyToken = function (req, res, next) {
+	// Get auth header value
+   	const bearerHeader = req.headers['authorization'];
+	if (typeof bearerHeader !== 'undefined') {
+		const bearer = bearerHeader.split(' ');
+		// Get token from split array
+		// FORMAT OF HEADER: "Authorization: Bearer <access_token>"
+		const bearerToken = bearer[1];
+
+		jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+			if (err) {
+				res.sendStatus(403);
+			} else {
+				console.log(authData); // user email in authData
+				next();
+			}
+		});
+
+	} else {
+		res.sendStatus(403); // Forbidden
+	}
+}
+
 // REGISTER OUR ROUTES
 // =============================================================
+const userRoutes = require('./Routes/users');
 const fileRoutes = require('./Routes/files');
 
-app.use('/files', fileRoutes);
-
+app.use('/users', userRoutes)
+app.use('/files', verifyToken, fileRoutes);
 
 // ROUTE TO REACT CLIENT FILES
 // =============================================================

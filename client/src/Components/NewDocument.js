@@ -43,13 +43,15 @@ class NewDocument extends Component {
         }
 
         var parsedPath = this.parsePath();
-        console.log(parsedPath);
+        console.log('Parsed path: ' + parsedPath);
 
         // Send new name, document, and path to be saved in to server
         axios.post('/files/new_file', { 
                 filename: doc_name.trim(),
                 newFile: this.state.newFile,
-                savePath: parsedPath })
+                savePath: parsedPath 
+            },
+            { headers: { authorization: 'Bearer ' + localStorage.token }})
             .then(res => console.log(res))
             .catch(err => console.log(err));
 
@@ -66,7 +68,13 @@ class NewDocument extends Component {
             path.pop();
             path = path.join('/');
         }
-        return path.replace(/%20/g, ' ') + '/';
+        path = path.replace(/%20/g, ' ') + '/';
+        path = path.replace(/\/\//g, '/');
+        if (path === 'new_document/') {
+            return '/';
+        }else{
+            return path;
+        }
     }
 
     render() {

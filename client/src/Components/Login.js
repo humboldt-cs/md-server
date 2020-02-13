@@ -19,13 +19,34 @@ class Login extends Component {
     }
 
     submitLogin(e) {
+        console.log('running')
         e.preventDefault();
-        console.log(this.state);
+
+        axios.post('/users/login', { email: this.state.email, password: this.state.password })
+            .then(res => {
+                if (res.data !== 'auth failure') {
+                    localStorage.token = res.data;
+                    window.location.reload();
+                }else{
+                    alert('Login failed');
+                }
+            })
+            .catch(err => console.log(err));
     }
     
     submitNewUser(e) {
         e.preventDefault();
-        console.log(this.state);
+
+        axios.post('/users/newUser', { email: this.state.email, password: this.state.password })
+            .then(res => {
+                if (res.data === 'account created') {
+                    this.setState({ newUser: false });
+                    window.location.reload();
+                }else{
+                    alert('Could not create new user. An account may already be associated with the given email address.');
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     changeHandler(e) {
@@ -66,7 +87,7 @@ class Login extends Component {
                         <br />
                         <button className='loginButton' type='submit'>Login</button>
                         <hr />
-                        <button className='newUserButton' onClick={() => this.setState({ newUser: true })}>Create Account</button>
+                        <button className='newUserButton' onClick={() => this.setState({ newUser: true })} type='button'>Create Account</button>
                     </form>
                 </MuiThemeProvider>
                 </div>
@@ -74,8 +95,9 @@ class Login extends Component {
         }else{
             return (
                 <div className='loginFrame'>
+                <MuiThemeProvider theme={theme}>
                 <form className="loginForm" onSubmit={this.submitNewUser} >
-                    <h2>Create an account</h2>
+                    <h2>New Account</h2>
                     <TextField 
                         id='email'
                         name='email'
@@ -92,8 +114,9 @@ class Login extends Component {
                     <br />
                     <button className='loginButton' type='submit'>Create Account</button>
                     <hr />
-                    <button className='newUserButton' onClick={() => this.setState({ newUser: false })}>Existing User</button>
+                    <button className='newUserButton' onClick={() => this.setState({ newUser: false })} type='button'>Existing User</button>
                 </form>
+                </MuiThemeProvider>
                 </div>
             )
         }

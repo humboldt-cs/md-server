@@ -36,7 +36,11 @@ class MarkdownViewer extends Component {
     }
 
     getMdContents(filename) {
-        fetch('/files/fetchFiles/' + window.location.pathname)
+        fetch('/files/fetchFiles/' + window.location.pathname, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.token
+            }
+        })
             .then((res) => res.text())
             .then((text) => {
                 var fileContents = text;
@@ -62,7 +66,11 @@ class MarkdownViewer extends Component {
         if (this.state.editing) {
             this.setState({ editing: false })
 
-            axios.post('/files/' + this.state.fileName, { updatedFile: this.state.updatedFile, pathname: window.location.pathname.replace(/%20/g, ' ') })
+            axios.post('/files/' + this.state.fileName, {
+                    updatedFile: this.state.updatedFile,
+                    pathname: window.location.pathname.replace(/%20/g, ' ') 
+                },
+                { headers: { authorization: 'Bearer ' + localStorage.token }})
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 
@@ -77,7 +85,8 @@ class MarkdownViewer extends Component {
 
         if (window.confirm("Delete file? This cannot be undone.")) {
             console.log("5 realz? " + window.location.pathname);
-            axios.delete('/files' + window.location.pathname)
+            axios.delete('/files' + window.location.pathname, 
+                { headers: { authorization: 'Bearer ' + localStorage.token }})
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
 

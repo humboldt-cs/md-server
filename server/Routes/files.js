@@ -3,11 +3,41 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 var path = require('path');
+const jwt = require('jsonwebtoken');
 
 router.use(bodyParser.json());
 
+function getEmailFromToken(bearerHeader) {
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           return authData.email;
+        });
+    }
+}
+
 router.get('/fetchFiles/:pathname*', (req, res) => {
-    var mdDirectory = __dirname + '/../MarkdownFiles/';
+    var email = undefined;
+    var mdDirectory = undefined;
+
+    var bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           email = authData.email;
+        });
+    }
+
+    if (email !== undefined) {
+        mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
+    }else{
+        //res.sendStatus(403);
+        //return null;
+    }
 
     if (req.params.pathname !== "root") {
         // Get index of path after 'fetchFiles'
@@ -18,8 +48,6 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
     }
 
     if (mdDirectory.substring(mdDirectory.length - 4, mdDirectory.length) === '.md/') {
-        console.log("== " + mdDirectory);
-        console.log(path.resolve("\n|| " + mdDirectory));
         res.sendFile(path.resolve(mdDirectory));
     }else{
         var fileArray = [];

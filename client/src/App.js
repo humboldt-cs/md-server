@@ -10,12 +10,13 @@ import NewDocument from './Components/NewDocument';
 import FileBrowser from './Components/FileBrowser';
 import homeIcon from './resources/home.png';
 import newIcon from './resources/new.png';
+import logoutIcon from './resources/logout.png';
 
 class App extends Component {
 
   render() {
     // If not logged in, send user to login
-    if (localStorage.user === undefined) {
+    if (localStorage.token === undefined) {
       return (<Login />)
     }else{
       return (
@@ -30,6 +31,11 @@ class App extends Component {
             <a href={window.location.origin + '/new_document' + window.location.pathname}>
               <img className='new_icon' src={newIcon} alt='new document' />
             </a>
+            <br />
+            <img className='logout_icon' src={logoutIcon} alt='logout' onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            }} />
           </div>
   
           <div className='pageContent'>

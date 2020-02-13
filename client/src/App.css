@@ -22,6 +22,7 @@ form.loginForm {
   margin: auto;
   display: flex;
   flex-direction: column;
+  min-width: 200px;
 }
 
 button.loginButton {
@@ -46,7 +47,6 @@ div.navBar {
   height: 100%;
   width: 60px;
   border-right: 1px solid grey;
-  position: fixed;
 }
 
 div.pageContent {
@@ -89,6 +89,14 @@ img.home_icon {
 img.new_icon {
   height: 45px;
   margin: 5px;
+}
+
+img.logout_icon {
+  position: absolute;
+  bottom: 0;
+  height: 45px;
+  margin: 7px;
+  cursor: pointer;
 }
 
 .new_document_panel {

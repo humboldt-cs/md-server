@@ -20,7 +20,11 @@ class FileBrowser extends Component {
         if (window.location.pathname !== '/') {
           pathname = window.location.pathname;
         }
-        fetch('/files/fetchFiles/' + pathname)
+        fetch('/files/fetchFiles/' + pathname, {
+          headers: {
+              'Authorization': 'Bearer ' + localStorage.token
+          }
+        })
           .then(res => res.json())
           .then(fileData => this.setState({ fileData }));
       }
