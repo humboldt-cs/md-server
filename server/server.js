@@ -1,6 +1,7 @@
 
 const express = require('express');
 const app = express();
+const db = require('./Database/database');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fileUpload = require('express-fileupload');

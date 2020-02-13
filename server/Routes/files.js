@@ -18,6 +18,8 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
     }
 
     if (mdDirectory.substring(mdDirectory.length - 4, mdDirectory.length) === '.md/') {
+        console.log("== " + mdDirectory);
+        console.log(path.resolve("\n|| " + mdDirectory));
         res.sendFile(path.resolve(mdDirectory));
     }else{
         var fileArray = [];

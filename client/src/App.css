@@ -4,6 +4,44 @@
   height: 100vh;
 }
 
+/* Login */
+div.loginFrame {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: lightgray;
+  display: flex;
+}
+
+form.loginForm {
+  text-align: center;
+  vertical-align: middle;
+  width: 20%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+button.loginButton {
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: transparent;
+  border-color: white;
+}
+
+button.newUserButton {
+  margin: 5px;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: transparent;
+  border-color: white;
+}
+
+/* Homepage */
 div.navBar {
   height: 100%;
   width: 60px;

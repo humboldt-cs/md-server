@@ -12,6 +12,7 @@ class MarkdownViewer extends Component {
         this.deleteFile = this.deleteFile.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
+    
     state = {
         mdFile: "",
         htmlFile: "",
