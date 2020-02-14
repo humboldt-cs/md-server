@@ -91,6 +91,13 @@ img.new_icon {
   margin: 5px;
 }
 
+img.new_folder_icon {
+  height: 45px;
+  margin-left: 7px;
+  margin-right: 7px;
+  cursor: pointer;
+}
+
 img.logout_icon {
   position: absolute;
   bottom: 0;

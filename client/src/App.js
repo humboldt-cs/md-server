@@ -7,9 +7,11 @@ import {
 } from 'react-router-dom';
 import Login from './Components/Login';
 import NewDocument from './Components/NewDocument';
+import NewFolder from './Components/NewFolder';
 import FileBrowser from './Components/FileBrowser';
 import homeIcon from './resources/home.png';
 import newIcon from './resources/new.png';
+import newFolder from './resources/new_folder.png';
 import logoutIcon from './resources/logout.png';
 
 class App extends Component {
@@ -32,6 +34,10 @@ class App extends Component {
               <img className='new_icon' src={newIcon} alt='new document' />
             </a>
             <br />
+            <a href={window.location.origin + '/new_folder' + window.location.pathname}>
+              <img className='new_folder_icon' src={newFolder} alt='new folder' />
+            </a>
+            <br />
             <img className='logout_icon' src={logoutIcon} alt='logout' onClick={() => {
               localStorage.clear();
               window.location.reload();
@@ -44,6 +50,7 @@ class App extends Component {
   
               <Switch>
                   <Route path='/new_document*' component={NewDocument} />
+                  <Route path='/new_folder*' component={NewFolder} />
               </Switch>
             </Router>
           </div>

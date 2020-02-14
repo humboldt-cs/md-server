@@ -7,17 +7,6 @@ const jwt = require('jsonwebtoken');
 
 router.use(bodyParser.json());
 
-function getEmailFromToken(bearerHeader) {
-    if (typeof bearerHeader !== 'undefined') {
-        var bearer = bearerHeader.split(' ');
-        var bearerToken = bearer[1];
-
-        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
-           return authData.email;
-        });
-    }
-}
-
 router.get('/fetchFiles/:pathname*', (req, res) => {
     var email = undefined;
     var mdDirectory = undefined;
@@ -35,8 +24,8 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
     if (email !== undefined) {
         mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
     }else{
-        //res.sendStatus(403);
-        //return null;
+        res.sendStatus(403);
+        return null;
     }
 
     if (req.params.pathname !== "root") {
@@ -76,18 +65,86 @@ router.get('/fetchFiles/:pathname*', (req, res) => {
 });
 
 router.post('/new_file', (req, res) => {
-    if (req.body.filename.trim() != "" && req.body.newFile.trim() != "") {
-        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + req.body.savePath + req.body.filename + '.md', req.body.newFile, function (err) {
+    var email = undefined;
+    var mdDirectory = undefined;
+
+    var bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           email = authData.email;
+        });
+    }
+
+    if (email !== undefined) {
+        mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
+    }else{
+        res.sendStatus(403);
+        return null;
+    }
+
+    if (req.body.filename.trim() !== '' && req.body.newFile.trim() !== '') {
+        fs.writeFileSync(mdDirectory + req.body.savePath + req.body.filename + '.md', req.body.newFile, function (err) {
             if (err) { return console.log('Could not save new file: ' + err); }
+        });
+    }
+});
+
+router.post('/new_folder', (req, res) => {
+    var email = undefined;
+    var mdDirectory = undefined;
+
+    var bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           email = authData.email;
+        });
+    }
+
+    if (email !== undefined) {
+        mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
+    }else{
+        res.sendStatus(403);
+        return null;
+    }
+
+    if (req.body.folderName.trim() !== '') {
+        fs.mkdirSync(mdDirectory + req.body.savePath + req.body.folderName, function (err) {
+            if (err) { return console.log('Could not create folder'); }
         });
     }
 });
 
 // Update an existing file
 router.post('/:filename', (req, res) => {
+    var email = undefined;
+    var mdDirectory = undefined;
+
+    var bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           email = authData.email;
+        });
+    }
+
+    if (email !== undefined) {
+        mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
+    }else{
+        res.sendStatus(403);
+        return null;
+    }
+
     if (req.body.updatedFile.trim() != "") {
         var filename = req.originalUrl.split('/').pop().replace(/%20/g, ' ');
-        fs.writeFileSync(__dirname + '/../MarkdownFiles/' + req.body.pathname, req.body.updatedFile, function (err) {
+        fs.writeFileSync(mdDirectory + req.body.pathname, req.body.updatedFile, function (err) {
             if (err) { return console.log(err); }
         });
     }
@@ -95,11 +152,31 @@ router.post('/:filename', (req, res) => {
 });
 
 router.delete('/:pathname*', (req, res) => {
+    var email = undefined;
+    var mdDirectory = undefined;
+
+    var bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+
+        jwt.verify(bearerToken, process.env.SECRET, (err, authData) => {
+           email = authData.email;
+        });
+    }
+
+    if (email !== undefined) {
+        mdDirectory = __dirname + '/../MarkdownFiles/' + email + '/';
+    }else{
+        res.sendStatus(403);
+        return null;
+    }
+    
     // Get index of path after 'fetchFiles'
     var pathIndex = req.originalUrl.indexOf(req.params.pathname.replace(/ /g,'%20'));
     // turn everything after 'fetchFiles' into a file route
     var fileRoute = req.originalUrl.substring(pathIndex).replace(/%20/g, ' ');
-    fs.unlinkSync(__dirname + '/../MarkdownFiles/' + fileRoute);
+    fs.unlinkSync(mdDirectory + fileRoute);
 });
 
 module.exports = router;

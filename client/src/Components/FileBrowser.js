@@ -31,7 +31,9 @@ class FileBrowser extends Component {
     }
   
     render() {
-      if (window.location.pathname.substring(0, 13) === '/new_document') {
+      if ((window.location.pathname.substring(0, 13) === '/new_document')
+      || (window.location.pathname.substring(0, 11) === '/new_folder'))
+      {
         return null;
       }
 
